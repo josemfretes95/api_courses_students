@@ -9,6 +9,7 @@ use App\Http\Requests\Course\StoreUpdateCourseRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use PDOException;
 
 class CourseController extends Controller
 {
@@ -115,11 +116,19 @@ class CourseController extends Controller
                 'message' => 'Curso no encontrado.'
             ], 404);
         } catch (Exception $e) {
-            Log::error($e);
+            if ($e instanceof PDOException) {
+                if ($e->getCode() == '23503') {
+                    return response()->json([
+                        'message' => 'No se puede eliminar porque tiene datos relacionados.'
+                    ], 400);
+                }
+            } else {
+                Log::error($e);
 
-            return response()->json([
-                'message' => 'Error al eliminar curso.'
-            ], 500);
+                return response()->json([
+                    'message' => 'Error al eliminar curso.'
+                ], 500);
+            }
         }
     }
 }

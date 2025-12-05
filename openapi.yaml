@@ -1,0 +1,969 @@
+openapi: 3.0.0
+info:
+  title: API_COURSES_STUDENTS
+  description: API RESTful para la gestión de una plataforma de cursos online.
+  version: 1.0.0
+servers:
+  - url: http://{{baseurl}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: AUTH
+  - name: COURSES
+  - name: STUDENTS
+  - name: ENROLLMENTS
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - AUTH
+      summary: LOGIN
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: admin@admin.com
+                password: admin
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 12:11:50 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "access_token": "1|Mk8lR9qSmbhvanHkrgNvvyEhvLazeDnTNePycwm94a3547ea",
+                    "token_type": "Bearer",
+                    "user": {
+                        "nombre": "admin",
+                        "email": "admin@admin.com"
+                    }
+                }
+  /api/auth/logout:
+    post:
+      tags:
+        - AUTH
+      summary: LOGOUT
+      requestBody:
+        content: {}
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:08:59 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Se cerró la sesión."
+                }
+  /api/auth/register:
+    post:
+      tags:
+        - AUTH
+      summary: REGISTER
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: user
+                email: user@user.com
+                password: '12345678'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:08:59 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                example-0:
+                  summary: LOGOUT
+                  value: |-
+                    {
+                        "message": "Se cerró la sesión."
+                    }
+                example-1:
+                  summary: REGISTER
+                  value: |-
+                    {
+                        "message": "Usuario creado."
+                    }
+  /api/courses:
+    get:
+      tags:
+        - COURSES
+      summary: LIST
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:11:31 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                [
+                    {
+                        "id": 1,
+                        "title": "Curso de Programación en PHP",
+                        "description": "Introducción práctica al desarrollo backend con PHP.",
+                        "start_date": "2025-01-15",
+                        "end_date": "2025-02-15"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Curso de Desarrollo Web Full Stack",
+                        "description": "Aprende frontend y backend con tecnologías modernas.",
+                        "start_date": "2025-03-01",
+                        "end_date": "2025-06-01"
+                    }
+                ]
+    post:
+      tags:
+        - COURSES
+      summary: CREATE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Curso 1
+                description: Descripcion de curso 1
+                start_date: '2025-12-10'
+                end_date: '2025-12-10'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:12:46 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Curso creado."
+                }
+  /api/courses/{courseId}:
+    get:
+      tags:
+        - COURSES
+      summary: DETAILS
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:12:30 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "id": 1,
+                    "title": "Curso de Programación en PHP",
+                    "description": "Introducción práctica al desarrollo backend con PHP.",
+                    "start_date": "2025-01-15",
+                    "end_date": "2025-02-15"
+                }
+    put:
+      tags:
+        - COURSES
+      summary: UPDATE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Curso 1.1
+                description: Descripcion de curso 1.1
+                start_date: '2025-12-20'
+                end_date: '2025-12-20'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:13:32 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Curso actualizado."
+                }
+    delete:
+      tags:
+        - COURSES
+      summary: DELETE
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:24:05 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Curso eliminado."
+                }
+  /api/students:
+    get:
+      tags:
+        - STUDENTS
+      summary: LIST
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:28:16 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                [
+                    {
+                        "id": 1,
+                        "name": "María González",
+                        "email": "maria.gonzalez@example.com",
+                        "birthday": "1995-03-12",
+                        "nationality": "argentina"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Carlos Romero",
+                        "email": "c.romero92@example.com",
+                        "birthday": "1992-07-25",
+                        "nationality": "chilena"
+                    }
+                ]
+    post:
+      tags:
+        - STUDENTS
+      summary: CREATE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Juan Perez
+                email: juanperez@gnail.com
+                birthday: '1990-01-01'
+                nationality: paraguaya
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:29:47 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Estudiante creado."
+                }
+  /api/students/{studentId}:
+    get:
+      tags:
+        - STUDENTS
+      summary: DETAILS
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: studentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:27:19 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "id": 1,
+                    "name": "María González",
+                    "email": "maria.gonzalez@example.com",
+                    "birthday": "1995-03-12",
+                    "nationality": "argentina"
+                }
+    put:
+      tags:
+        - STUDENTS
+      summary: UPDATE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Juan Perezz
+                email: juanperez@gnail.comm
+                birthday: '1990-01-02'
+                nationality: argentina
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: studentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:30:04 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Estudiante actualizado."
+                }
+    delete:
+      tags:
+        - STUDENTS
+      summary: DELETE
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: studentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:29:16 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Estudiante eliminado."
+                }
+  /api/enrollments:
+    get:
+      tags:
+        - ENROLLMENTS
+      summary: LIST
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: student_id
+          in: query
+          schema:
+            type: integer
+          description: ID del estudiante
+          example: '1'
+        - name: course_id
+          in: query
+          schema:
+            type: integer
+          description: ID del curso
+          example: '1'
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Nro. de página
+          example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Cantidad de datos por página
+          example: '10'
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: Dirección del orden por fecha
+          example: desc
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:04:28 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "data": [
+                        {
+                            "id": 1,
+                            "student_id": 1,
+                            "course_id": 1,
+                            "enrolled_at": "2025-12-05 07:10:10"
+                        }
+                    ],
+                    "meta": {
+                        "current_page": 1,
+                        "per_page": 10,
+                        "total": 1,
+                        "last_page": 1
+                    }
+                }
+    post:
+      tags:
+        - ENROLLMENTS
+      summary: CREATE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                student_id: 2
+                course_id: 5
+                enrolled_at: '2025-12-10 10:11:12'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:05:39 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Inscripción creada."
+                }
+  /api/enrollments/{enrollmentId}:
+    delete:
+      tags:
+        - ENROLLMENTS
+      summary: DELETE
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: enrollmentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: number
+                example: 127.0.0.1:8000
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: number
+                example: PHP/8.2.27
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Date:
+              schema:
+                type: string
+                example: Fri, 05 Dec 2025 13:06:12 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Inscripción eliminada."
+                }
