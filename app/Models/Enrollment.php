@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Enrollment extends Model
 {
@@ -19,14 +18,4 @@ class Enrollment extends Model
         'course_id',
         'enrolled_at',
     ];
-
-    public function student(): HasOne
-    {
-        return $this->hasOne(Student::class);
-    }
-
-    public function course(): HasOne
-    {
-        return $this->hasOne(Course::class);
-    }
 }

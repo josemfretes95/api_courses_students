@@ -4,6 +4,7 @@ namespace App\Http\Requests\Enrollment;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class StoreEnrollmentRequest extends FormRequest
 {
@@ -23,7 +24,14 @@ class StoreEnrollmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required|integer|exists:App\Models\Student,id',
+            'student_id' => [
+                'required',
+                'integer',
+                'exists:App\Models\Student,id',
+                Rule::unique('enrollments', 'student_id')->where(function ($query) {
+                    $query->where('course_id', $this->course_id);
+                })
+            ],
             'course_id' => 'required|integer|exists:App\Models\Course,id',
             'enrolled_at' => 'required|date',
         ];
@@ -40,6 +48,7 @@ class StoreEnrollmentRequest extends FormRequest
             'student_id.required' => 'Campo obligatorio.',
             'student_id.integer' => 'Campo no válido.',
             'student_id.exists' => 'Estudiante no encontrado.',
+            'student_id.unique' => 'Estudiante ya inscripto en el curso.',
 
             'course_id.required' => 'Campo obligatorio.',
             'course_id.integer' => 'Campo no válido.',
